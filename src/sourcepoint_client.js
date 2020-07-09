@@ -13,6 +13,10 @@ var ACCEPT_ALL = "all";
 var REJECT_ALL = "none";
 var REJECT_SOME = "some"
 
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function gdpr_events(amp) {
   return {
     onMessageReady: loggedFunction('onMessageReady', function() {
@@ -22,9 +26,11 @@ function gdpr_events(amp) {
       console.error(error)
       amp.reject("");
     }),
-    onSPPMObjectReady: loggedFunction('onSPPMObjectReady', function() {
+    onSPPMObjectReady: loggedFunction('onSPPMObjectReady', async function() {
       if(amp.userTriggered()) {
         amp.show();
+        await timeout(1000);
+        amp.fullscreen();
       }
     }),
     onMessageChoiceSelect: loggedFunction('onMessageChoiceSelect', function (_choiceId, choiceType) {
@@ -114,9 +120,11 @@ function ccpa_events(amp) {
         amp.show();
       }
     },
-    onSPPMObjectReady: function () {
+    onSPPMObjectReady: async function () {
       if(amp.userTriggered()) {
         amp.show();
+        await timeout(1000);
+        amp.fullscreen();
       }
     }
   };
@@ -124,16 +132,22 @@ function ccpa_events(amp) {
 
 function tcfv2_events(amp) {
   return {
-    onMessageReady: loggedFunction('onMessageReady', function() {
+    onMessageReady: loggedFunction('onMessageReady', async function() {
       amp.show();
+      if(amp.userTriggered()) {
+        await timeout(1000);
+        amp.fullscreen();
+      }
     }),
     onMessageChoiceError: loggedFunction('onMessageChoiceError', function (error) {
       console.error(error)
       amp.reject("");
     }),
-    onSPPMObjectReady: loggedFunction('onSPPMObjectReady', function() {
+    onSPPMObjectReady: loggedFunction('onSPPMObjectReady', async function() {
       if(amp.userTriggered()) {
         amp.show();
+        await timeout(1000);
+        amp.fullscreen();
       }
     }),
     onMessageChoiceSelect: loggedFunction('onMessageChoiceSelect', function (_choiceId, choiceType) {
